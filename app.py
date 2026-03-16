@@ -323,7 +323,7 @@ if st.button("Forecasting"):
     col1, col2, col3 = st.columns(3)
 
     col1.metric("Worst Case", *fmt(rul_worst))
-    col2.metric("Mean Case", *fmt(rul_mean))
+    col2.metric("Base Case", *fmt(rul_mean))
     col3.metric("Best Case", *fmt(rul_best))
 
 
@@ -339,7 +339,7 @@ if st.button("Forecasting"):
         d1, d2, d3 = st.columns(3)
 
         d1.metric("Worst Case Date", failure_worst.strftime("%Y-%m-%d"))
-        d2.metric("Mean Case Date", failure_mean.strftime("%Y-%m-%d"))
+        d2.metric("Base Case Date", failure_mean.strftime("%Y-%m-%d"))
         d3.metric("Best Case Date", failure_best.strftime("%Y-%m-%d"))
 
 
