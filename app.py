@@ -18,7 +18,7 @@ st.sidebar.header("Model Selection")
 
 DATA_DIR = Path("data")
 
-selected_dataset = "TPC_VCM1_12-P-4007-B3A-P_ELB80CM"
+selected_dataset = "TPE_HD4_HX-7010"
 dataset_path = DATA_DIR / f"{selected_dataset}.csv"
 
 @st.cache_data
@@ -33,19 +33,17 @@ df = load_data(dataset_path)
 st.sidebar.caption(f"Loaded: {selected_dataset}")
 
 
-
-
 # ==========================================================
 # CORROSION RATE STATISTICS
 # ==========================================================
 # Note: This section is added in app_rev2.py to calculate and display CR statistics before the simulation parameters.
 st.subheader("Corrosion Rate (CR) Statistics")
 
-window = 144*30  # 1 month of data at 6 samples/hour
+window = 12#144*30  # 1 month of data at 6 samples/hour
 hours = window / 6   # if 6 samples per hour
 
 # Calculate CR statistics
-recent_cr = df["PREDICTED_CR_MA"].dropna().tail(window)
+recent_cr = df["PREDICTED_CR"].dropna().tail(window)
 
 if recent_cr.empty:
     st.warning("Not enough data.")
@@ -72,8 +70,8 @@ m2.metric("Std Dev CR (mm/year)", f"{std_cr_per_year:.6f}")
 st.subheader("Simulation Parameters")
 
 # Turnaround default dates depending on dataset
-DEFAULT_1TA = pd.to_datetime("2028-09-01")
-DEFAULT_2TA = pd.to_datetime("2031-01-01")
+DEFAULT_1TA = pd.to_datetime("2028-04-01")
+DEFAULT_2TA = pd.to_datetime("2029-04-01")
 
 # Turnaround input
 col1, col2 = st.columns(2)
@@ -89,7 +87,7 @@ turnaround_1st = pd.Timestamp(turnaround_1st)
 turnaround_2nd = pd.Timestamp(turnaround_2nd)
 
 # Minimum thickness allowance
-DEFAULT_MIN_THICKNESS = 4.0
+DEFAULT_MIN_THICKNESS = 3.0
 min_thickness = st.number_input(
         "Minimum requirement thickness (mm)",
         value=DEFAULT_MIN_THICKNESS,
@@ -315,7 +313,7 @@ if st.button("Forecasting"):
     col1, col2, col3 = st.columns(3)
 
     col1.metric("Worst Case", *fmt(rul_worst))
-    col2.metric("Mean Case", *fmt(rul_mean))
+    col2.metric("Base Case", *fmt(rul_mean))
     col3.metric("Best Case", *fmt(rul_best))
 
 
@@ -331,7 +329,7 @@ if st.button("Forecasting"):
         d1, d2, d3 = st.columns(3)
 
         d1.metric("Worst Case Date", failure_worst.strftime("%Y-%m-%d"))
-        d2.metric("Mean Case Date", failure_mean.strftime("%Y-%m-%d"))
+        d2.metric("Base Case Date", failure_mean.strftime("%Y-%m-%d"))
         d3.metric("Best Case Date", failure_best.strftime("%Y-%m-%d"))
 
 
